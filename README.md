@@ -127,3 +127,4 @@ table, so a stale column will otherwise surface as `no such column` at runtime.
 - **AI-only variants attach to diseases via shared gene**, since `AiPrediction` has no disease
   field. AI evidence never creates a disease on its own.
 # gene-doctor
+# gene-doctor
