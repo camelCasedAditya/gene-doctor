@@ -1,0 +1,30 @@
+# data (bulk reference downloads, genome files, generated pipeline outputs)
+data/
+*.fa
+*.fa.gz
+*.fasta
+*.fasta.gz
+*.bam
+*.bam.bai
+*.vcf
+*.vcf.gz
+*.db
+*.sqlite3
+
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# node
+frontend/node_modules/
+frontend/dist/
+
+# os
+.DS_Store
+
+# playwright/browser artifacts
+.playwright-mcp/
