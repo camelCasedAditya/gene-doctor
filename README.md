@@ -77,6 +77,36 @@ cd frontend && npm run dev                            # frontend on :5173
 Then: **Upload** (validate a FASTA by local path) → **Dashboard** (start the analysis, watch stage
 progress) → Variant Explorer / Diseases / Transcripts / ASO Designer.
 
+### Demo run
+
+```bash
+./run_demo.sh          # build a demo genome, start both servers, run the whole pipeline
+./run_demo.sh --path   # just print the upload file path
+```
+
+The demo genome is synthetic but structurally complete: all 25 chromosomes, real GRCh38 sequence at
+the loci of genes behind real ASO therapies (SMN2/nusinersen, SOD1/tofersen, TTR/inotersen,
+APOB/mipomersen, DMD/eteplirsen, HTT/tominersen, HBB, BRCA1), with variants planted in real exons.
+It passes validation and the full pipeline finishes in well under a minute, unlike a real
+whole-genome run.
+
+## Target provenance: validated vs AI-only
+
+A transcript reaches ASO design one of two ways, recorded in `Transcript.evidence_basis` and shown
+on every transcript and ASO in the UI and in every export:
+
+- **`validated`** — reached through a disease backed by ClinVar/GWAS evidence.
+- **`ai_hypothesis`** — reached only through AI-scored variants with no validated evidence anywhere.
+
+AI predictions never create a disease, so without the second path a novel variant could never
+produce a candidate at all and the AI arm of the pipeline would be unable to contribute a design.
+Validated genes always claim the gene budget first; AI-only leads fill what remains.
+
+Transcript discovery consumes diseases in rank order until it has `MAX_TARGET_GENES` (25) distinct
+genes, rather than truncating to a fixed number of diseases. A gene in a GWAS-dense locus can carry
+over a hundred separate trait associations — HBB really does — and a disease-count cap let one such
+gene fill every slot and starve every other implicated gene of a design.
+
 ## Scoring
 
 `overall_score` is a weighted mean over the sources that actually have data for a variant:
@@ -126,5 +156,6 @@ table, so a stale column will otherwise surface as `no such column` at runtime.
   disease under two vocabularies won't merge.
 - **AI-only variants attach to diseases via shared gene**, since `AiPrediction` has no disease
   field. AI evidence never creates a disease on its own.
+# gene-doctor
 # gene-doctor
 # gene-doctor
